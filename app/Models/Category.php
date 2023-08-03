@@ -10,8 +10,9 @@ class Category extends Model
 {
     use HasFactory;
 
-    public function visibility() : Attribute{
-        return new Attribute(get: fn() => $this->active ? 'Visible' : 'Hidden');
+    public function visibility(): Attribute
+    {
+        return new Attribute(get: fn () => $this->active ? 'Visible' : 'Hidden');
     }
 
     /**
@@ -31,7 +32,7 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
-        'active'=>'boolean'
+        'active' => 'boolean'
     ];
 
     /**
@@ -54,5 +55,4 @@ class Category extends Model
      * @var bool
      */
     public $incrementing = true;
-
 }

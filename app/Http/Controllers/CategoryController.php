@@ -12,10 +12,14 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = Category::all();
-        return response()->view('cms.categories.index',['data' => $data]);   
+        //HEADAR => accept: application/json
+        if ($request->expectsJson()) {
+            return response()->json(['status' => true, 'message' => 'Success', 'data' => $data], Response::HTTP_OK);
+        }
+        return response()->view('cms.categories.index', ['data' => $data]);
     }
 
     /**
@@ -38,9 +42,9 @@ class CategoryController extends Controller
         // ]);
 
         $request->validate([
-            'name'=>'required|string|min:3|max:30',
-            'info'=>'required|string|max:50',
-            'active'=>'nullable|string|in:on', 
+            'name' => 'required|string|min:3|max:30',
+            'info' => 'required|string|max:50',
+            'active' => 'nullable|string|in:on',
         ]);
 
         // Eloquent
@@ -52,7 +56,7 @@ class CategoryController extends Controller
 
         // return redirect()->back();
         return redirect()->route('categories.index');
-    } 
+    }
 
     /**
      * Display the specified resource.
@@ -60,7 +64,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         $category = Category::findOrFail($id);
-        return response()->json(['status'=>true,'message'=>'Success','object'=>$category],Response::HTTP_OK);
+        return response()->json(['status' => true, 'message' => 'Success', 'object' => $category], Response::HTTP_OK);
     }
 
     /**
@@ -69,7 +73,7 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
-        return response()->view('cms.categories.update',['category' => $category]);
+        return response()->view('cms.categories.update', ['category' => $category]);
     }
 
     /**
@@ -78,19 +82,19 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name'=>'required|string|min:3|max:30',
-            'info'=>'required|string|max:50',
-            'active'=>'nullable|string|in:on',
+            'name' => 'required|string|min:3|max:30',
+            'info' => 'required|string|max:50',
+            'active' => 'nullable|string|in:on',
         ]);
 
-            // Eloquent
-            $category = Category::findOrFail($id);
-            $category->name = $request->input('name');
-            $category->info =  $request->input('info');
-            $category->active = $request->has('active');
-            $updated = $category->save();
-            
-            return redirect()->route('categories.index');   
+        // Eloquent
+        $category = Category::findOrFail($id);
+        $category->name = $request->input('name');
+        $category->info =  $request->input('info');
+        $category->active = $request->has('active');
+        $updated = $category->save();
+
+        return redirect()->route('categories.index');
     }
 
     /**
